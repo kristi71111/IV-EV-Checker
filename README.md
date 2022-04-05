@@ -22,3 +22,4 @@
     B:onlyWorkOnOwnedPokemon=false
 # Notes
 - Changing the Item in the config and restarting the server will make all previous items given out (assuming the item is actually different) invalid. 
+- This mod is server side only. It won't work on client side.
