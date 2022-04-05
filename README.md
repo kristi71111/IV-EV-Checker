@@ -23,3 +23,16 @@
 # Notes
 - Changing the Item in the config and restarting the server will make all previous items given out (assuming the item is actually different) invalid. 
 - This mod is server side only. It won't work on client side.
+# Selling via shopkeeper
+- If you want to sell this item via a pixelmon shopkeeper you will need to edit the shopItems.json and add this in
+    
+      "id": "ivevchecker",
+      "name": "minecraft:stick",
+      "nbtData": "{display:{Name:\"§4IV/EV Checker\",Lore:[\"§5Usages left: §f10\"]}, ivevusage:10}",
+      "itemData": 0,
+      "buy": 5,
+      "sell": 2
+- Replacing the name with the config value that you set in the config and Name:\"§4IV/EV Checker with the itemName value, §5Usages left: §f10 (replacing the §f10 with §fmaxusagevalue (config value) and ivevusage:10 with ivevusage:maxUsage and setting every other value as you'd like.
+- Then add it to whatever shop keeper you desire by specifying the item name like so:
+    
+      "name": "ivevchecker"
