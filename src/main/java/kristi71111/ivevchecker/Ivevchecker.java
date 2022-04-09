@@ -22,7 +22,7 @@ public class Ivevchecker {
 
     public static final String MOD_ID = "ivevchecker";
     public static final String MOD_NAME = "Ivevchecker";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     public static Logger logger;
 
     @Mod.Instance(MOD_ID)

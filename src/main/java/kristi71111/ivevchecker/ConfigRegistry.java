@@ -20,19 +20,20 @@ public class ConfigRegistry {
 
     public static void init(Configuration c) {
         config = c;
+        c.load();
         createOrSyncConfig();
     }
 
     public static void createOrSyncConfig() {
-        String itemString = config.getString("item", "default", "minecraft:stick", "Define the item you want to use");
-        selectedItem = getSelectedItem(itemString);
+        selectedItem = getSelectedItem(config.getString("item", "default", "minecraft:stick", "Define the item you want to use"));
         selectedActualItem = selectedItem.getItem();
-        String ItemName = finalPattern.matcher(config.getString("itemName", "default", "&4IV/EV Checker", "Define the name of the item")).replaceAll("§");
-        SelectedItemName = ItemName;
-        selectedItem.setStackDisplayName(ItemName);
+        SelectedItemName = finalPattern.matcher(config.getString("itemName", "default", "&4IV/EV Checker", "Define the name of the item")).replaceAll("§");
+        selectedItem.setStackDisplayName(SelectedItemName);
         maxUsage = config.getInt("maxUsage", "default", 10, 1, Integer.MAX_VALUE, "Set's the maximum usage of defined item");
         OnlyWorkOnOwnedPokemon = config.getBoolean("onlyWorkOnOwnedPokemon", "default", false, "Should the item only work on pokemon that are owned?");
-        config.save();
+        if (config.hasChanged()) {
+            config.save();
+        }
     }
 
     private static ItemStack getSelectedItem(String selectedItem) {

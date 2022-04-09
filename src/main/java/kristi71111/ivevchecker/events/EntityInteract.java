@@ -39,6 +39,10 @@ public class EntityInteract {
                 return;
             }
             EntityPlayerMP playerMP = (EntityPlayerMP) event.getEntityPlayer();
+            if(stackUsed.getCount() > 1){
+                playerMP.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "You can only use this item if it's not stacked!"));
+                return;
+            }
             if (OnlyWorkOnOwnedPokemon) {
                 if (entityPixelmon.getOwnerId() != null) {
                     doLogic(stackUsed, playerMP, entityPixelmon.getPokemonData(), event.getHand());
@@ -55,24 +59,24 @@ public class EntityInteract {
         if (pokemon.isShiny()) {
             component.appendSibling(new TextComponentString(getRainbowChat(pokemon.getDisplayName() + ":") + "\n"));
         } else {
-            component.appendSibling(new TextComponentString(TextFormatting.DARK_RED + "" + TextFormatting.BOLD + pokemon.getDisplayName() + ":" + "\n"));
+            component.appendSibling(new TextComponentString(TextFormatting.AQUA + "" + TextFormatting.BOLD + pokemon.getDisplayName() + ":" + "\n"));
         }
-        EVStore evStore = pokemon.getEVs();
-        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " EV's (" + TextFormatting.GOLD + evStore.getTotal() + "/510" + TextFormatting.AQUA + ")" + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + evStore.getStat(StatsType.HP) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.Attack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.Defence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialAttack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialDefence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + evStore.getStat(StatsType.Speed) + "\n"));
         IVStore ivStore = pokemon.getIVs();
-        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " IV's (" + TextFormatting.GOLD + ivStore.getTotal() + "/186" + TextFormatting.AQUA + ")" + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " IV's (" + TextFormatting.GOLD + ivStore.getTotal() + TextFormatting.AQUA + "/" + TextFormatting.GOLD + "186" + TextFormatting.AQUA + ")" + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + ivStore.getStat(StatsType.HP) + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Attack) + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Defence) + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + ivStore.getStat(StatsType.SpecialAttack) + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + ivStore.getStat(StatsType.SpecialDefence) + "\n"));
         component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Speed) + "\n"));
+        EVStore evStore = pokemon.getEVs();
+        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " EV's (" + TextFormatting.GOLD + evStore.getTotal() + TextFormatting.AQUA + "/" + TextFormatting.GOLD + 510 + TextFormatting.AQUA + ")" + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + evStore.getStat(StatsType.HP) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.Attack) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.Defence) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialAttack) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialDefence) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + evStore.getStat(StatsType.Speed) + "\n"));
         //Reduce usages or vanish
         NBTTagCompound compound = stackUsed.getTagCompound();
         int count = compound.getInteger("ivevusage");
@@ -85,6 +89,9 @@ public class EntityInteract {
         if (--count == 0) {
             playerMP.setHeldItem(hand, ItemStack.EMPTY);
             component.appendSibling(new TextComponentString(SelectedItemName + "'s" + TextFormatting.DARK_RED + " usage has been exceeded!"));
+            playerMP.inventoryContainer.detectAndSendChanges();
+            playerMP.sendMessage(component);
+            return;
         } else {
             String usage = count == 1 ? " usage" : " usages";
             component.appendSibling(new TextComponentString(SelectedItemName + TextFormatting.GOLD + " has " + TextFormatting.AQUA + count + TextFormatting.GOLD + usage + " left!"));

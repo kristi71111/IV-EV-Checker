@@ -3,7 +3,7 @@
     "modid": "ivevchecker",
     "name": "Ivevchecker",
     "description": "Allows giving of a item with limited usage that show's a Pokémon's IV's and EV's",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "mcversion": "1.12.2",
     "url": "",
     "updateUrl": "",
