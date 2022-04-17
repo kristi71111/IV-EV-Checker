@@ -1,10 +1,10 @@
 package kristi71111.ivevchecker.events;
 
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.entities.pixelmon.EntityPixelmon;
-import com.pixelmonmod.pixelmon.entities.pixelmon.stats.EVStore;
-import com.pixelmonmod.pixelmon.entities.pixelmon.stats.IVStore;
-import com.pixelmonmod.pixelmon.entities.pixelmon.stats.StatsType;
+import com.pixelmongenerations.common.entity.pixelmon.EntityPixelmon;
+import com.pixelmongenerations.common.entity.pixelmon.stats.EVsStore;
+import com.pixelmongenerations.common.entity.pixelmon.stats.IVStore;
+import com.pixelmongenerations.common.entity.pixelmon.stats.StatsType;
+import com.pixelmongenerations.core.storage.PlayerStorage;
 import kristi71111.ivevchecker.ConfigRegistry;
 import kristi71111.ivevchecker.commands.MainCommand;
 import net.minecraft.entity.Entity;
@@ -45,38 +45,46 @@ public class EntityInteract {
             }
             if (OnlyWorkOnOwnedPokemon) {
                 if (entityPixelmon.getOwnerId() != null) {
-                    doLogic(stackUsed, playerMP, entityPixelmon.getPokemonData(), event.getHand());
+                    doLogic(stackUsed, playerMP, entityPixelmon, event.getHand());
                 }
                 return;
             }
-            doLogic(stackUsed, playerMP, entityPixelmon.getPokemonData(), event.getHand());
+            doLogic(stackUsed, playerMP, entityPixelmon, event.getHand());
         }
     }
 
-    private void doLogic(ItemStack stackUsed, EntityPlayerMP playerMP, Pokemon pokemon, EnumHand hand) {
+    private void doLogic(ItemStack stackUsed, EntityPlayerMP playerMP, EntityPixelmon pokemon, EnumHand hand) {
         ITextComponent component = new TextComponentString("");
         //Shiny easter egg formatting
         if (pokemon.isShiny()) {
-            component.appendSibling(new TextComponentString(getRainbowChat(pokemon.getDisplayName() + ":") + "\n"));
+            component.appendSibling(new TextComponentString(getRainbowChat(pokemon.getDisplayName().getUnformattedText() + ":") + "\n"));
         } else {
-            component.appendSibling(new TextComponentString(TextFormatting.AQUA + "" + TextFormatting.BOLD + pokemon.getDisplayName() + ":" + "\n"));
+            component.appendSibling(new TextComponentString(TextFormatting.AQUA + "" + TextFormatting.BOLD + pokemon.getDisplayName().getUnformattedText() + ":" + "\n"));
         }
-        IVStore ivStore = pokemon.getIVs();
+        IVStore ivStore = pokemon.stats.IVs;
         component.appendSibling(new TextComponentString(TextFormatting.AQUA + " IV's (" + TextFormatting.GOLD + ivStore.getTotal() + TextFormatting.AQUA + "/" + TextFormatting.GOLD + "186" + TextFormatting.AQUA + ")" + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + ivStore.getStat(StatsType.HP) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Attack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Defence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + ivStore.getStat(StatsType.SpecialAttack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + ivStore.getStat(StatsType.SpecialDefence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + ivStore.getStat(StatsType.Speed) + "\n"));
-        EVStore evStore = pokemon.getEVs();
-        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " EV's (" + TextFormatting.GOLD + evStore.getTotal() + TextFormatting.AQUA + "/" + TextFormatting.GOLD + 510 + TextFormatting.AQUA + ")" + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + evStore.getStat(StatsType.HP) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.Attack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.Defence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialAttack) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + evStore.getStat(StatsType.SpecialDefence) + "\n"));
-        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + evStore.getStat(StatsType.Speed) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + ivStore.get(StatsType.HP) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + ivStore.get(StatsType.Attack) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + ivStore.get(StatsType.Defence) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + ivStore.get(StatsType.SpecialAttack) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + ivStore.get(StatsType.SpecialDefence) + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + ivStore.get(StatsType.Speed) + "\n"));
+        EVsStore evStore = pokemon.stats.EVs;
+        //The way generations does this is... more code
+        int EVHP = evStore.get(StatsType.HP);
+        int EVAttack = evStore.get(StatsType.HP);
+        int EVDefence = evStore.get(StatsType.HP);
+        int EVSpecialAttack = evStore.get(StatsType.HP);
+        int EVSpecialDefence = evStore.get(StatsType.HP);
+        int EVSpeed = evStore.get(StatsType.HP);
+        int totalEv = EVHP + EVAttack + EVDefence  + EVSpecialAttack + EVSpecialDefence + EVSpeed;
+        component.appendSibling(new TextComponentString(TextFormatting.AQUA + " EV's (" + TextFormatting.GOLD + totalEv + TextFormatting.AQUA + "/" + TextFormatting.GOLD + 510 + TextFormatting.AQUA + ")" + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "HP: " + TextFormatting.AQUA + EVHP + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Atk: " + TextFormatting.AQUA + EVAttack + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Def: " + TextFormatting.AQUA + EVDefence + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Atk: " + TextFormatting.AQUA + EVSpecialAttack+ "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Sp. Def: " + TextFormatting.AQUA + EVSpecialDefence + "\n"));
+        component.appendSibling(new TextComponentString(TextFormatting.WHITE + "  - " + TextFormatting.GOLD + "Spd: " + TextFormatting.AQUA + EVSpeed + "\n"));
         //Reduce usages or vanish
         NBTTagCompound compound = stackUsed.getTagCompound();
         int count = compound.getInteger("ivevusage");
