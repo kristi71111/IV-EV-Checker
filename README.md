@@ -1,6 +1,6 @@
 # IV-EV-Checker
 - A very simple mod that allows you to give out an item that has limited usage and displays a pokemons IV's and EV's on use.
-- Requires Pixelmon Reforged
+- Requires Pixelmon Reforged or Pixelmon Generations
 
 # 1.Commands and permissions
 ## 1.1 Commands 
